@@ -1,9 +1,9 @@
 {
-  "name": "@Davifranca-Portfolio/ui",
+  "name": "@Davifranca-Portfolio/shared",
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./*": "./src/*.{ts,tsx}"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

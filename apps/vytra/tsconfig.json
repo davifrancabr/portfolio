@@ -1,0 +1,22 @@
+{
+  "extends": "@Davifranca-Portfolio/typescript-config/tanstack-react.json",
+  "compilerOptions": {
+    "paths": {
+      "#/*": ["./src/*"],
+      "@/*": ["./src/*"]
+    },
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+  },
+  "include": [
+    "**/*.ts", 
+    "**/*.tsx", 
+    "eslint.config.js", 
+    "prettier.config.js", 
+    "vite.config.js"
+  ],
+}
