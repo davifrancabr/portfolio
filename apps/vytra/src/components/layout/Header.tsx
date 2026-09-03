@@ -1,28 +1,75 @@
-import { getSession } from '#/lib/auth.function';
-import { useQuery } from '@tanstack/react-query';
+import { authClient } from '#/lib/auth-client';
 import { Link } from '@tanstack/react-router';
-import { useServerFn } from '@tanstack/react-start';
 import { Heart, Home } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../ui/dropdown-menu';
 import { Input } from '../ui/input';
 
+function BetterAuthHeader() {
+  const { data: session, isPending } = authClient.useSession();
+
+  if (isPending) {
+    return (
+      <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+    );
+  }
+
+  if (session?.user) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          {session.user.image ? (
+            <img src={session.user.image} alt="" className="h-8 w-8" />
+          ) : (
+            <div className="h-8 w-8 bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
+              <span className="text-xs font-medium text-neutral-600 dark:text-neutral-400">
+                {session.user.name?.charAt(0).toUpperCase() || 'U'}
+              </span>
+            </div>
+          )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link to="/">Perfil</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/">Meus Pedidos</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/">Meus Pedidos</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Button
+              onClick={() => {
+                void authClient.signOut();
+              }}
+            >
+              Sair
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  return (
+    <section className="block gap-2 space-x-2">
+      <Link to="/entrar">Entrar</Link>
+      <Link to="/registrar">Cadastrar</Link>
+    </section>
+  );
+}
+
 export function Header() {
-  const session = useServerFn(getSession);
-
-  const { data: user } = useQuery({
-    queryKey: ['current-user'],
-    queryFn: () => session()
-  });
-
-  const data = user?.user;
-
   return (
     <header className="sticky top-0 flex flex-row items-center h-16 bg-surface-3 px-4 shadow-md">
       <nav className="flex flex-row items-center justify-between w-full">
@@ -37,22 +84,7 @@ export function Header() {
           </section>
         </section>
         <section>
-          {data ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src={`${data.image}`} />
-                  <AvatarFallback>{data.name[0]}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
-                <DropdownMenuItem>Meu perfil</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <p>Login</p>
-          )}
+          <BetterAuthHeader />
         </section>
       </nav>
     </header>

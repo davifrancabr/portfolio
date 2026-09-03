@@ -10,11 +10,29 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as RegistrarRouteImport } from './routes/registrar'
+import { Route as PerfilIndexRouteImport } from './routes/perfil/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistrarRoute = RegistrarRouteImport.update({
+  id: '/registrar',
+  path: '/registrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerfilIndexRoute = PerfilIndexRouteImport.update({
+  id: '/perfil/',
+  path: '/perfil/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -25,27 +43,39 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/entrar': typeof EntrarRoute
+  '/registrar': typeof RegistrarRoute
+  '/perfil/': typeof PerfilIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/entrar': typeof EntrarRoute
+  '/registrar': typeof RegistrarRoute
+  '/perfil': typeof PerfilIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/entrar': typeof EntrarRoute
+  '/registrar': typeof RegistrarRoute
+  '/perfil/': typeof PerfilIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/auth/$'
+  fullPaths: '/' | '/entrar' | '/registrar' | '/perfil/' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/auth/$'
-  id: '__root__' | '/' | '/api/auth/$'
+  to: '/' | '/entrar' | '/registrar' | '/perfil' | '/api/auth/$'
+  id: '__root__' | '/' | '/entrar' | '/registrar' | '/perfil/' | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EntrarRoute: typeof EntrarRoute
+  RegistrarRoute: typeof RegistrarRoute
+  PerfilIndexRoute: typeof PerfilIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -56,6 +86,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registrar': {
+      id: '/registrar'
+      path: '/registrar'
+      fullPath: '/registrar'
+      preLoaderRoute: typeof RegistrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perfil/': {
+      id: '/perfil/'
+      path: '/perfil'
+      fullPath: '/perfil/'
+      preLoaderRoute: typeof PerfilIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -70,6 +121,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EntrarRoute: EntrarRoute,
+  RegistrarRoute: RegistrarRoute,
+  PerfilIndexRoute: PerfilIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
