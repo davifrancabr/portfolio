@@ -1,7 +1,18 @@
-import { authClient } from '#/lib/auth-client';
-import { registerSchema, type Register } from '#/lib/schema';
+'use client';
+
+import { authClient } from '@/lib/auth-client';
+import { registerSchema, type Register } from '@/lib/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Button } from '../ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
@@ -107,14 +118,24 @@ export function Register() {
       </section>
       <section>
         <Label htmlFor="image">Foto de Perfil</Label>
-        <Input
-          id="image"
-          placeholder="Ex.: John Martinez"
-          {...register('name')}
-        />
-        {errors.name && (
-          <p className="text-destructive">{errors.name.message}</p>
-        )}
+
+        <Dialog>
+          <DialogTrigger
+            render={<Button>Enviar foto de perfil</Button>}
+            content="a"
+          />
+          <DialogContent className="bg-surface-3 text-background">
+            <DialogHeader>
+              <DialogTitle>Foto de perfil</DialogTitle>
+              <DialogDescription>
+                Abra ou arraste sua foto para o campo
+              </DialogDescription>
+            </DialogHeader>
+            <section className="flex flex-col justify-center items-center gap-2">
+              <Input accept="image/png,jpeg,webp" type="file" />
+            </section>
+          </DialogContent>
+        </Dialog>
       </section>
     </form>
   );

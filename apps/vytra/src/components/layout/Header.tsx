@@ -1,6 +1,8 @@
-import { authClient } from '#/lib/auth-client';
-import { Link } from '@tanstack/react-router';
+'use client';
+
+import { authClient } from '@/lib/auth-client';
 import { Heart, Home } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -38,16 +40,16 @@ function BetterAuthHeader() {
         <DropdownMenuContent>
           <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
           <DropdownMenuItem>
-            <Link to="/">Perfil</Link>
+            <Link href="/">Perfil</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to="/">Meus Pedidos</Link>
+            <Link href="/">Meus Pedidos</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link to="/">Meus Pedidos</Link>
+            <Link href="/">Meus Pedidos</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem>
             <Button
               onClick={() => {
                 void authClient.signOut();
@@ -63,8 +65,8 @@ function BetterAuthHeader() {
 
   return (
     <section className="block gap-2 space-x-2">
-      <Link to="/entrar">Entrar</Link>
-      <Link to="/registrar">Cadastrar</Link>
+      <Link href="/login">Login</Link>
+      <Link href="/cadastrar">Cadastrar</Link>
     </section>
   );
 }
@@ -73,7 +75,7 @@ export function Header() {
   return (
     <header className="sticky top-0 flex flex-row items-center h-16 bg-surface-3 px-4 shadow-md">
       <nav className="flex flex-row items-center justify-between w-full">
-        <Link to="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <Home /> Inicio
         </Link>
         <section className="flex items-center gap-4">
