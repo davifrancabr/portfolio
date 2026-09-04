@@ -1,11 +1,8 @@
 import { Header } from '@/components/layout/Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
-import { extractRouterConfig } from 'uploadthing/server';
-import { fileRouter } from './api/upload-auth/core';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -39,7 +36,6 @@ export default function RootLayout({ children }: Readonly<LayoutProps<'/'>>) {
       )}
     >
       <body className="min-h-full flex flex-col">
-        <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <TooltipProvider>
           <Header />
           {children}
