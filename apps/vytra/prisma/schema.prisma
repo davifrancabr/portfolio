@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/db/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum InventoryMovimentType {
+  ENTRADA
+  SAIDA
+  AJUSTE
+
+  @@map("inventory_movement_type")
+}
+
+model Product {
+  id          String      @id @default(cuid(2))
+  name        String
+  description String?
+  sku         String      @unique(map: "products_sku_uidx")
+  costPrice   Decimal     @db.Decimal(12, 2)
+  salePrice   Decimal     @db.Decimal(12, 2)
+  deletedAt   DateTime?   @db.Timestamptz(6)
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  inventories Inventory[]
+  favorites   Favorite[]
+
+  @@index([deletedAt], map: "products_deleted_at_idx")
+  @@map("products")
+}
+
+model Storages {
+  id          String      @id @default(cuid(2))
+  name        String
+  address     String      @unique(map: "storages_address_uidx")
+  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime    @default(now()) @updatedAt @db.Timestamptz(6)
+  inventories Inventory[]
+
+  @@map("storages")
+}
+
+model Inventory {
+  storagesId         String
+  productId          String
+  storage            Storages            @relation(fields: [storagesId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  product            Product             @relation(fields: [productId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  quantity           Int                 @default(0)
+  minimumQuantity    Int                 @default(0)
+  createdAt          DateTime            @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+  inventoryMovements InventoryMovement[]
+
+  @@id([storagesId, productId])
+  @@index([productId], map: "inventory_product_id_idx")
+  @@index([storagesId], map: "inventory_storage_id_idx")
+  @@map("inventory")
+}
+
+model Favorite {
+  userId      String
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  isPublic    Boolean  @default(true)
+  favoritedAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@id([userId, productId])
+  @@index([userId], map: "favorites_user_id_idx")
+  @@index([productId], map: "favorites_product_id_idx")
+  @@index([productId, favoritedAt(sort: Desc)], map: "favorites_product_favorited_at_idx")
+  @@map("favorites")
+}
+
+model InventoryMovement {
+  id             String                @id @default(cuid(2))
+  userId         String
+  storageId      String
+  productId      String
+  type           InventoryMovimentType
+  quantityBefore Int
+  quantity       Int
+  quantityAfter  Int
+  reason         String?
+  occurredAt     DateTime              @default(now()) @db.Timestamptz(6)
+  createdAt      DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime              @default(now()) @updatedAt @db.Timestamptz(6)
+  inventory      Inventory             @relation(fields: [storageId, productId], references: [storagesId, productId], onDelete: Restrict, onUpdate: NoAction, map: "inventory_movements_inventory_fk")
+
+  @@index([storageId, productId, occurredAt(sort: Desc)], map: "inventory_movements_storage_product_occurred_idx")
+  @@index([userId, occurredAt(sort: Desc)], map: "inventory_movements_user_occurred_idx")
+  @@map("inventory_movements")
+}
