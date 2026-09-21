@@ -13,7 +13,7 @@ export const registerSchema = z
     username: z.string().min(6),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
-    image: z.url()
+    image: z.literal('').or(z.url())
   })
   .refine(a => a.password === a.confirmPassword, {
     path: ['confirmPassword']

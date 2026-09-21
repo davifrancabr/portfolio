@@ -1,3 +1,4 @@
+import { Header } from '@/components/layout/Header';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
@@ -34,7 +35,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       )}
     >
       <body className="min-h-full flex flex-col">
-        <TooltipProvider>{children}</TooltipProvider>
+        <TooltipProvider>
+          <Header />
+          {children}
+        </TooltipProvider>
       </body>
     </html>
   );
