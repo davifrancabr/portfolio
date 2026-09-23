@@ -43,7 +43,7 @@ export function SignupForm() {
             email: value.email,
             username: value.username,
             password: value.password,
-            image: value.image ?? undefined
+            image: value.image
           },
           {
             onSuccess: () => router.push('/')

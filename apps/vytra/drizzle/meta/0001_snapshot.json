@@ -1,6 +1,6 @@
 {
-  "id": "91b5d80e-f21d-4f06-a9be-a89ed5dd9a65",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "1df9c297-55a3-4dab-9508-832e9f9fc5eb",
+  "prevId": "91b5d80e-f21d-4f06-a9be-a89ed5dd9a65",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -4003,6 +4003,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "payment_customer_id": {
+          "name": "payment_customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accepts_marketing": {
+          "name": "accepts_marketing",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "locate": {
+          "name": "locate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pt-BR'"
         },
         "created_at": {
           "name": "created_at",

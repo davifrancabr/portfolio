@@ -1,6 +1,6 @@
 {
-  "id": "91b5d80e-f21d-4f06-a9be-a89ed5dd9a65",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "dac19b06-9dcd-49e0-b77f-04f05b7703a0",
+  "prevId": "5f2643ea-1f19-4d45-925a-e28e8936eebf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -892,6 +892,13 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -2291,6 +2298,13 @@
         },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -3840,6 +3854,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -4004,6 +4025,26 @@
           "primaryKey": false,
           "notNull": false
         },
+        "payment_customer_id": {
+          "name": "payment_customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "accepts_marketing": {
+          "name": "accepts_marketing",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "locate": {
+          "name": "locate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pt-BR'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -4040,6 +4081,21 @@
           "columns": [
             {
               "expression": "role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_payment_idx": {
+          "name": "user_payment_idx",
+          "columns": [
+            {
+              "expression": "payment_customer_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"

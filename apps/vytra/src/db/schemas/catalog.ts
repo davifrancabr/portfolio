@@ -1,7 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
 import { relations, sql } from 'drizzle-orm';
 import {
-  type AnyPgColumn,
   boolean,
   index,
   integer,
@@ -11,7 +10,8 @@ import {
   primaryKey,
   text,
   timestamp,
-  uniqueIndex
+  uniqueIndex,
+  type AnyPgColumn
 } from 'drizzle-orm/pg-core';
 import { productStatusEnum } from './enum';
 
@@ -250,9 +250,7 @@ export const productImages = pgTable(
     /** Placeholder base64/blurhash para LQIP. */
     blurDataUrl: text('blur_data_url'),
     position: integer('position').default(0).notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
+    ...timestamps
   },
   t => [
     index('product_images_product_idx').on(t.productId, t.position),

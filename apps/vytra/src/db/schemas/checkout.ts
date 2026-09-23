@@ -11,7 +11,7 @@ import {
   uniqueIndex
 } from 'drizzle-orm/pg-core';
 import { user } from './auth';
-import { products, productVariants } from './catalog';
+import { productVariants, products } from './catalog';
 import { cartStatusEnum, discountTypeEnum } from './enum';
 
 const timestamps = {
@@ -124,9 +124,7 @@ export const couponRedemptions = pgTable(
     /** FK lógica para orders.id (definida em order.ts para evitar ciclo). */
     orderId: text('order_id'),
     discountAppliedCents: integer('discount_applied_cents').notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
+    ...timestamps
   },
   t => [
     index('coupon_redemptions_coupon_user_idx').on(t.couponId, t.userId),

@@ -1,0 +1,2 @@
+ALTER TABLE "stock_movements" ADD COLUMN "updated_at" timestamp with time zone DEFAULT now() NOT NULL;--> statement-breakpoint
+CREATE INDEX "user_payment_idx" ON "user" USING btree ("payment_customer_id");

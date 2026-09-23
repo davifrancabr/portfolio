@@ -34,11 +34,15 @@ export const user = pgTable(
     banExpires: timestamp('ban_expires', { withTimezone: true }),
     phone: text('phone'),
     taxId: text('tax_id'),
+    paymentCustomerId: text('payment_customer_id'),
+    acceptsMarketing: boolean('accepts_marketing').default(false).notNull(),
+    locate: text('locate').default('pt-BR').notNull(),
     ...timestamps
   },
   t => [
     uniqueIndex('user_email_uidx').on(t.email),
-    index('user_role_idx').on(t.role)
+    index('user_role_idx').on(t.role),
+    index('user_payment_idx').on(t.paymentCustomerId)
   ]
 );
 

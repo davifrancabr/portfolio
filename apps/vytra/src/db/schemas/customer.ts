@@ -11,7 +11,7 @@ import {
   uniqueIndex
 } from 'drizzle-orm/pg-core';
 import { user } from './auth';
-import { products, productVariants } from './catalog';
+import { productVariants, products } from './catalog';
 import { addressTypeEnum, reviewStatusEnum } from './enum';
 
 const timestamps = {

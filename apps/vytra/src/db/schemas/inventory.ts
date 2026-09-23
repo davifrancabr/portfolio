@@ -99,9 +99,7 @@ export const stockMovements = pgTable(
     createdBy: text('created_by').references(() => user.id, {
       onDelete: 'set null'
     }),
-    createdAt: timestamp('created_at', { withTimezone: true })
-      .defaultNow()
-      .notNull()
+    ...timestamps
   },
   t => [
     index('stock_movements_item_idx').on(t.inventoryItemId, t.createdAt),
