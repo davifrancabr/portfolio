@@ -78,188 +78,178 @@ export const shipmentStatusEnum = z.enum([
 
 export const reviewStatusEnum = z.enum(['pending', 'approved', 'rejected']);
 
-export const registerSchema = z
-  .object({
-    name: z.string().min(2),
-    email: z.email().nonempty(),
-    username: z.string().min(6),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
-    image: z.literal('').or(z.url()),
-    phone: z.e164(),
-    taxId: z.string(),
-    paymentCustomerId: z.string(),
-    acceptsMarketing: z.boolean().default(false).nonoptional(),
-    locate: z.string().default('pt-BR')
-  })
-  .refine(a => a.password === a.confirmPassword, {
-    path: ['confirmPassword']
-  });
-export type Register = z.infer<typeof registerSchema>;
+const timestamps = {
+  createdAt: z.iso.datetime().nonempty(),
+  updatedAt: z.iso.datetime().nonempty()
+};
+
+export const userSchema = z.object({
+  id: z.cuid2().nonempty(),
+  name: z.string().nonempty(),
+  email: z.email(),
+  image: z.url(),
+  username: z.string(),
+  ...timestamps
+});
+
+export const createUserSchema = userSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const brandsSchema = z.object({
+  id: z.cuid2().nonempty(),
   name: z.string().nonempty(),
   slug: z.string().nonempty(),
-  description: z.string(),
-  logoUrl: z.url(),
-  isActive: z.boolean().nonoptional().default(true)
+  description: z.string().optional(),
+  logoUrl: z.url().optional(),
+  isActive: z.boolean().default(true),
+  ...timestamps
 });
-export type Brands = z.infer<typeof brandsSchema>;
+
+export const createBrandsSchema = brandsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const categoriesSchema = z.object({
-  parentId: z.cuid2(),
+  id: z.cuid2().nonempty(),
   name: z.string().nonempty(),
   slug: z.string().nonempty(),
   description: z.string(),
   imageUrl: z.url(),
-  path: z.string().nonempty(),
-  depth: z.int().positive().default(0),
-  position: z.int().positive().default(0),
-  isActive: z.boolean().nonoptional().default(true),
-  metaTile: z.string(),
-  metaDescription: z.string()
+  isActive: z.boolean(),
+  ...timestamps
 });
-export type Categories = z.infer<typeof categoriesSchema>;
+
+export const createCategorySchema = categoriesSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const productsSchema = z.object({
+  id: z.cuid2().nonempty(),
   brandId: z.cuid2(),
   primaryCategoryId: z.cuid2(),
   name: z.string().nonempty(),
   slug: z.string().nonempty(),
-  shortDescription: z.string(),
+  sku: z.string().nonempty(),
   description: z.string(),
-  status: productStatusEnum.nonoptional().default('draft'),
-  isDigital: z.boolean().nonoptional().default(false),
-  requiresShipping: z.boolean().nonoptional().default(true),
-  taxCode: z.string(),
-  taxRate: z.number(),
-  tags: z.array(z.string()).nonempty(),
+  status: productStatusEnum.default('draft').nonoptional(),
+  isDigital: z.boolean().default(false).nonoptional(),
+  requiresShipping: z.boolean().default(true).nonoptional(),
+  taxCode: z.string(), //Código fiscal
+  taxRate: z.number(), // Aliquota
+  tags: z.array(z.string().nonempty()).nonempty(),
+  priceCents: z.number().int().nonnegative(),
+  compareAtPriceCents: z.number().int(),
+  costCents: z.number().int(),
   attributes: z.json(),
-  metaTitle: z.string(),
-  metaDescription: z.string(),
-  ratingAverange: z.number().positive().default(0),
-  ratingCount: z.int().positive().default(0),
+  ratingAverage: z.number().default(0).nonoptional(),
+  ratingCount: z.number().int().default(0).nonoptional(),
   publishedAt: z.iso.datetime(),
-  deletedAt: z.iso.datetime()
+  deletedAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Products = z.infer<typeof productsSchema>;
+
+export const createProductSchema = productsSchema.omit({
+  id: true,
+  deletedAt: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export const productImagesSchema = z.object({
+  id: z.cuid2().nonempty(),
+  productId: z.cuid2().nonempty(),
+  url: z.url().nonempty(),
+  alt: z.string(),
+  width: z.number().int(),
+  height: z.number().int(),
+  /** Placeholder base64/blurhash para LQIP. */
+  blurDataUrl: z.url(),
+  position: z.number().int().default(0).nonoptional(),
+  ...timestamps
+});
 
 export const productCategoriesSchema = z.object({
   productId: z.cuid2().nonempty(),
   categoryId: z.cuid2().nonempty()
 });
-export type ProductCategories = z.infer<typeof productCategoriesSchema>;
-
-export const productOptions = z.object({
-  productId: z.cuid2().nonempty(),
-  name: z.string().nonempty(),
-  position: z.int().positive().default(0)
-});
-export type ProductOptions = z.infer<typeof productOptions>;
-
-export const productOptionValuesSchema = z.object({
-  optionId: z.cuid2().nonempty(),
-  values: z.string().nonempty(),
-  metadata: z.json(),
-  position: z.int().positive().default(0)
-});
-export type ProductOptionsValues = z.infer<typeof productOptionValuesSchema>;
-
-export const productVariantsSchema = z.object({
-  productId: z.cuid2().nonempty(),
-  sku: z.string().nonempty(),
-  barcode: z.string(),
-  name: z.string(),
-  priceCents: z.int().positive(),
-  compareAtPriceCents: z.int(),
-  costCents: z.int(),
-  weightGrams: z.int(),
-  lengthMm: z.int(),
-  widthMn: z.int(),
-  heightMn: z.int(),
-  allowBackorder: z.boolean().nonoptional().default(false),
-  isActive: z.boolean().nonoptional().default(true),
-  isDefault: z.boolean().nonoptional().default(false),
-  position: z.int().positive().default(0),
-  deletedAT: z.iso.datetime()
-});
-export type ProductVariants = z.infer<typeof productVariantsSchema>;
-
-export const variantOptionValuesSchema = z.object({
-  variantId: z.cuid2().nonempty(),
-  optionValueId: z.cuid2().nonempty()
-});
-export type VariantOptionValues = z.infer<typeof variantOptionValuesSchema>;
-
-export const productImagesSchema = z.object({
-  productId: z.cuid2().nonempty(),
-  variantId: z.cuid2(),
-  url: z.url().nonempty(),
-  alt: z.string(),
-  widht: z.int(),
-  height: z.int(),
-  blurDataUrl: z.string(),
-  position: z.int().positive().default(0)
-});
-export type ProductImages = z.infer<typeof productImagesSchema>;
 
 export const cartsSchema = z.object({
+  id: z.cuid2().nonempty(),
   userId: z.cuid2(),
-  guestToken: z.string(),
-  status: cartStatusEnum.nonoptional().default('active'),
-  currency: z.currencyCode().nonempty().default('BRL'),
-  email: z.email(),
+  status: cartStatusEnum.default('active').nonoptional(),
+  currency: z.currencyCode().default('BRL').nonoptional(),
   couponCode: z.string(),
   notes: z.string(),
-  metadata: z.json(),
-  expiresAt: z.iso.datetime()
+  expiresAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Carts = z.infer<typeof cartsSchema>;
+
+export const createCartSchema = cartsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const cartItemsSchema = z.object({
+  id: z.cuid2().nonempty(),
   cartId: z.cuid2().nonempty(),
-  variantId: z.cuid2().nonempty(),
   productId: z.cuid2().nonempty(),
-  quantity: z.int().positive(),
-  unitPriceCents: z.int().positive(),
-  compareAtPriceCents: z.int()
+  quantity: z.number().int().nonoptional(),
+  unitPriceCents: z.number().int().nonoptional(),
+  compareAtPriceCents: z.number().int(),
+  ...timestamps
 });
-export type CartItems = z.infer<typeof cartItemsSchema>;
 
 export const couponsSchema = z.object({
+  id: z.cuid2().nonempty(),
   code: z.string().nonempty(),
   description: z.string(),
-  discountType: discountTypeEnum.nonoptional(),
-  discountValue: z.int().positive(),
-  maxDicountCents: z.int(),
-  minSubtotalCents: z.int().positive().default(0),
-  maxRedemptions: z.int(),
-  maxRedemptionsPerUser: z.int().positive().default(1),
-  redemptionCount: z.int().positive().default(0),
-  appliesToProductIds: z.array(z.cuid2()),
-  appliesToCategoryIds: z.array(z.cuid2()),
-  firstOrderOnly: z.boolean().nonoptional().default(false),
-  isActive: z.boolean().nonoptional().default(true),
+  discountType: discountTypeEnum,
+  discountValue: z.number().int(),
+  maxDiscountCents: z.number().int(),
+  minSubtotalCents: z.number().int().default(0),
+  maxRedemptions: z.number().int(),
+  maxRedemptionsPerUser: z.number().int().default(1),
+  redemptionCount: z.number().int().default(0),
+  appliesToProductIds: z.array(z.cuid2()).optional(),
+  appliesToCategoryIds: z.array(z.cuid2()).optional(),
+  firstOrderOnly: z.boolean(),
+  isActive: z.boolean().default(true),
   startsAt: z.iso.datetime(),
-  endsAt: z.iso.datetime()
+  endsAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Coupons = z.infer<typeof couponsSchema>;
+
+export const createCouponsSchema = couponsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const couponRedemptionsSchema = z.object({
+  id: z.cuid2().nonempty(),
   couponId: z.cuid2().nonempty(),
   userId: z.cuid2(),
-  orderID: z.cuid2(),
-  discountAppliedCents: z.int().positive()
+  orderId: z.cuid2(),
+  discountAppliedCents: z.number().int().nonoptional(),
+  ...timestamps
 });
-export type CouponRedemptions = z.infer<typeof couponRedemptionsSchema>;
 
-export const addressSchema = z.object({
+export const addressesSchema = z.object({
+  id: z.cuid2().nonempty(),
   userId: z.cuid2().nonempty(),
   type: addressTypeEnum.default('both').nonoptional(),
   label: z.string(),
   recipientName: z.string().nonempty(),
-  phone: z.e164(),
-  taxId: z.string(),
+  phone: z.string(),
+  taxId: z.cuid2(),
   postalCode: z.string().nonempty(),
   street: z.string().nonempty(),
   number: z.string().nonempty(),
@@ -270,209 +260,329 @@ export const addressSchema = z.object({
   country: z.string().nonempty().default('BR'),
   reference: z.string(),
   isDefaultShipping: z.boolean().default(false).nonoptional(),
-  isDefaultBilling: z.boolean().default(false).nonoptional()
+  isDefaultBilling: z.boolean().default(false).nonoptional(),
+  ...timestamps
 });
-export type Address = z.infer<typeof addressSchema>;
 
-export const wishlistSchema = z.object({
-  userId: z.cuid2().nonempty(),
-  name: z.string().nonempty().default('Favoritos'),
-  isPublic: z.boolean().default(false).nonoptional(),
-  shareToken: z.string()
+export const addressSnapshotSchema = z.object({
+  recipientName: z.string(),
+  phone: z.string().optional(),
+  taxId: z.string().optional(),
+  postalCode: z.string(),
+  street: z.string(),
+  number: z.string(),
+  complement: z.string().optional(),
+  district: z.string(),
+  city: z.string(),
+  state: z.string(),
+  country: z.string()
 });
-export type Wishlist = z.infer<typeof wishlistSchema>;
+
+export const wishlistsSchema = z.object({
+  id: z.cuid2().nonempty(),
+  userId: z.cuid2().nonempty(),
+  name: z.string().default('Favoritos'),
+  isPublic: z.boolean().default(false).nonoptional(),
+  shareToken: z.string(),
+  ...timestamps
+});
+
+export const createWishlistSchema = wishlistsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const wishlistItemsSchema = z.object({
+  id: z.cuid2().nonempty(),
   wishlistId: z.cuid2().nonempty(),
   productId: z.cuid2().nonempty(),
-  variantId: z.cuid2(),
-  note: z.string()
+  note: z.string(),
+  ...timestamps
 });
-export type WishlistItems = z.infer<typeof wishlistItemsSchema>;
 
 export const reviewsSchema = z.object({
+  id: z.cuid2().nonempty(),
   productId: z.cuid2().nonempty(),
   userId: z.cuid2().nonempty(),
-  orderItem: z.cuid2(),
-  rating: z.int().min(1).max(5),
+  /** Referência ao item do pedido — prova de compra verificada. */
+  orderItemId: z.cuid2(),
+  rating: z.number().int().nonoptional(), // 1..5 (valide com CHECK)
   title: z.string(),
   body: z.string(),
-  status: reviewStatusEnum.nonoptional().default('pending'),
-  isVerifiedPurchase: z.boolean().nonoptional().default(false),
-  helpfulCount: z.int().default(0),
+  status: reviewStatusEnum.default('pending').nonoptional(),
+  isVerifiedPurchase: z.boolean().default(false).nonoptional(),
+  helpfulCount: z.number().int().default(0).nonoptional(),
+  /** Resposta da loja. */
   reply: z.string(),
-  repliedAt: z.iso.datetime()
+  repliedAt: z.iso.datetime,
+  ...timestamps
 });
-export type Reviews = z.infer<typeof reviewsSchema>;
+
+export const createReviewSchema = reviewsSchema.omit({
+  id: true,
+  repliedAt: true,
+  reply: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const warehousesSchema = z.object({
+  id: z.cuid2().nonempty(),
   name: z.string().nonempty(),
   code: z.string().nonempty(),
   postalCode: z.string(),
   city: z.string(),
   state: z.string(),
-  country: z.string().nonempty().default('BR'),
-  isActive: z.boolean().default(true),
-  priority: z.int().default(0)
+  country: z.string().default('BR').nonoptional(),
+  isActive: z.boolean(),
+  /** Prioridade de alocação: menor número é escolhido primeiro. */
+  priority: z.number().int().default(0).nonoptional(),
+  ...timestamps
 });
-export type Warehouses = z.infer<typeof warehousesSchema>;
+
+export const createWarehouseSchema = warehousesSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const inventoryItemsSchema = z.object({
-  variantId: z.cuid2().nonempty(),
+  id: z.cuid2().nonempty(),
+  productId: z.cuid2().nonempty(),
   warehouseId: z.cuid2().nonempty(),
-  quantity: z.int().nonnegative().default(0),
-  reservedQuantity: z.int().nonnegative().default(0),
-  safetyStock: z.int().nonnegative().default(0),
-  reorderPoint: z.int().nonnegative().default(0),
-  binLocation: z.string()
+
+  /** Quantidade física no depósito. */
+  quantity: z.number().int().default(0).nonoptional(),
+  /** Reservado por carrinhos/pedidos ainda não faturados. */
+  reservedQuantity: z.number().int().default(0).nonoptional(),
+  /** Colchão que não deve ser vendido (buffer contra oversell). */
+  safetyStock: z.number().int().default(0).nonoptional(),
+  /** Dispara alerta de reposição. */
+  reorderPoint: z.number().int().default(0).nonoptional(),
+  binLocation: z.string(),
+  ...timestamps
 });
-export type InventoryItem = z.infer<typeof inventoryItemsSchema>;
 
 export const stockMovementsSchema = z.object({
+  id: z.cuid2().nonempty(),
   inventoryItemId: z.cuid2().nonempty(),
   type: stockMovementTypeEnum.nonoptional(),
-  quantity: z.int().nonoptional(),
-  balanceAfter: z.int(),
+  /** Positivo = entrada, negativo = saída. */
+  quantity: z.number().int().nonoptional(),
+  /** Saldo resultante após o movimento — facilita auditoria. */
+  balanceAfter: z.number().int(),
+
+  /** Origem do movimento: "order", "return", "manual", "import"... */
   referenceType: z.string(),
-  referenceId: z.string(),
+  referenceId: z.cuid2(),
   note: z.string(),
-  createdBy: z.cuid2()
+
+  createdBy: z.cuid2(),
+  ...timestamps
 });
-export type StockMovements = z.infer<typeof stockMovementsSchema>;
 
 export const ordersSchema = z.object({
+  id: z.cuid2().nonempty(),
+  /** Número legível exibido ao cliente, ex.: "2026-000451". */
   orderNumber: z.string().nonempty(),
+
   userId: z.cuid2(),
   cartId: z.cuid2(),
-  email: z.email().nonempty(),
-  phone: z.e164(),
-  status: orderStatusEnum.nonoptional().default('pending'),
-  paymentStatus: paymentStatusEnum.nonoptional().default('pending'),
-  fulfillmentStatus: fulfillmentStatusEnum.nonoptional().default('unfulfilled'),
-  currency: z.string().nonempty().default('BRL'),
-  subtotalCents: z.int().nonoptional(),
-  discountCents: z.int().nonoptional().default(0),
-  shippingCents: z.int().nonoptional().default(0),
-  taxCents: z.int().nonoptional().default(0),
-  totalCents: z.int().nonoptional(),
-  refundedCents: z.int().nonoptional().default(0),
+  /** Sempre preenchido, inclusive em guest checkout. */
+  email: z.email(),
+  phone: z.string(),
+
+  status: orderStatusEnum.default('pending').nonoptional(),
+  paymentStatus: paymentStatusEnum.default('pending').nonoptional(),
+  fulfillmentStatus: fulfillmentStatusEnum.default('unfulfilled').nonoptional(),
+
+  currency: z.currencyCode().default('BRL').nonoptional(),
+  /** Soma dos itens, sem frete/desconto/imposto. */
+  subtotalCents: z.number().int().nonoptional(),
+  discountCents: z.number().int().default(0).nonoptional(),
+  shippingCents: z.number().int().default(0).nonoptional(),
+  taxCents: z.number().int().default(0).nonoptional(),
+  /** subtotal - desconto + frete + imposto. */
+  totalCents: z.number().int().nonoptional(),
+  refundedCents: z.number().int().default(0).nonoptional(),
+
   couponId: z.cuid2(),
   couponCode: z.string(),
-  shippingAddress: z.json(),
-  billingAddress: z.json(),
+
+  /** Snapshots congelados no momento da compra. */
+  shippingAddress: addressSnapshotSchema.optional(),
+  billingAddress: addressSnapshotSchema.optional(),
+
   customerNote: z.string(),
   internalNote: z.string(),
   cancelReason: z.string(),
-  metadata: z.json(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
+
   placedAt: z.iso.datetime().nonoptional(),
   paidAt: z.iso.datetime(),
   shippedAt: z.iso.datetime(),
   deliveredAt: z.iso.datetime(),
-  canceledAt: z.iso.datetime()
+  canceledAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Orders = z.infer<typeof ordersSchema>;
+
+export const createOrderSchema = ordersSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const orderItemsSchema = z.object({
+  id: z.cuid2().nonempty(),
   orderId: z.cuid2().nonempty(),
+  // Referências "melhor esforço" — podem virar null se o catálogo mudar.
   productId: z.cuid2(),
-  variantId: z.cuid2(),
+
+  // --- snapshot ---
   productName: z.string().nonempty(),
-  variantName: z.string(),
   sku: z.string().nonempty(),
   imageUrl: z.url(),
+  /** Opções escolhidas: { "Cor": "Azul", "Tamanho": "M" } */
   optionsSnapshot: z.json(),
-  quantity: z.int().positive(),
-  unitPriceCents: z.int().positive(),
-  discountCents: z.int().positive().default(0),
-  taxCents: z.int().positive().default(0),
-  totalCents: z.int().positive(),
-  fulfilledQuantity: z.int().positive().default(0),
-  refundedQuantity: z.int().positive().default(0)
+
+  quantity: z.number().int().nonoptional(),
+  unitPriceCents: z.number().int().nonoptional(),
+  discountCents: z.number().int().default(0).nonoptional(),
+  taxCents: z.number().int().default(0).nonoptional(),
+  /** quantity * unitPrice - discount + tax. */
+  totalCents: z.number().int().nonoptional(),
+
+  fulfilledQuantity: z.number().int().default(0).nonoptional(),
+  refundedQuantity: z.number().int().default(0).nonoptional(),
+
+  ...timestamps
 });
-export type OrderItem = z.infer<typeof orderItemsSchema>;
 
 export const paymentsSchema = z.object({
+  id: z.cuid2().nonempty(),
   orderId: z.cuid2().nonempty(),
   method: paymentMethodEnum.nonoptional(),
-  status: paymentStatusEnum.nonoptional().default('pending'),
-  amountCents: z.int().positive(),
-  currency: z.currencyCode().nonempty().default('BRL'),
+  status: paymentStatusEnum.default('pending').nonoptional(),
+  amountCents: z.number().int().nonoptional(),
+  currency: z.currencyCode().default('BRL').nonoptional(),
+
+  /** "stripe" | "mercadopago" | "pagarme" | "asaas" ... */
   provider: z.string().nonempty(),
-  providerTransactionId: z.string(),
-  installments: z.int().positive().default(1),
+  /** ID da transação no gateway — use para idempotência com webhooks. */
+  providerTransactionId: z.cuid2(),
+
+  installments: z.number().int().nonoptional(),
+  /** Cartão: bandeira e 4 últimos dígitos. NUNCA guarde o PAN completo. */
   cardBrand: z.string(),
   cardLast4: z.string(),
+  /** Pix: copia-e-cola e QR. Boleto: linha digitável e URL do PDF. */
   pixQrCode: z.string(),
   boletoBarcode: z.string(),
-  boletoUrl: z.string(),
+  boletoUrl: z.url(),
   dueAt: z.iso.datetime(),
+
   failureCode: z.string(),
   failureMessage: z.string(),
+  /** Payload bruto do webhook, para auditoria. */
   rawResponse: z.json(),
+
   authorizedAt: z.iso.datetime(),
-  paidAt: z.iso.datetime()
+  paidAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Payments = z.infer<typeof paymentsSchema>;
+
+export const createPaymentSchema = paymentsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const refundsSchema = z.object({
+  id: z.cuid2().nonempty(),
   orderId: z.cuid2().nonempty(),
   paymentId: z.cuid2(),
-  amountCents: z.int().positive(),
+  amountCents: z.number().int().nonoptional(),
   reason: z.string(),
-  status: paymentStatusEnum.nonoptional().default('pending'),
-  providerRefundId: z.string(),
-  createdBy: z.cuid2()
+  status: paymentStatusEnum.default('pending').nonoptional(),
+  providerRefundId: z.cuid2(),
+  createdBy: z.cuid2(),
+  ...timestamps
 });
-export type Refunds = z.infer<typeof refundsSchema>;
+
+export const createRefundSchema = refundsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const shippingMethodsSchema = z.object({
-  name: z.string().nonempty(),
-  carrier: z.string(),
+  id: z.cuid2().nonempty(),
+  name: z.string().nonempty(), // "PAC", "Sedex", "Retirada na loja"
+  carrier: z.string(), // "correios", "jadlog", "loggi"
   code: z.string().nonempty(),
-  basePriceCents: z.int().positive().default(0),
-  freeAboveCents: z.int(),
-  minDays: z.int(),
-  maxDays: z.int(),
-  isActive: z.int().positive().default(1)
+  basePriceCents: z.number().int().default(0).nonoptional(),
+  /** Frete grátis acima deste subtotal. Null = nunca. */
+  freeAboveCents: z.number().int(),
+  minDays: z.number().int(),
+  maxDays: z.number().int(),
+  isActive: z.boolean().default(true).nonoptional(),
+  ...timestamps
 });
-export type ShippingMethods = z.infer<typeof shippingMethodsSchema>;
+
+export const createShipmentMethodSchema = shippingMethodsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
 
 export const shipmentsSchema = z.object({
+  id: z.cuid2().nonempty(),
   orderId: z.cuid2().nonempty(),
   shippingMethodId: z.cuid2(),
-  status: shipmentStatusEnum.nonoptional().default('pending'),
+  status: shipmentStatusEnum.default('pending').nonoptional(),
   carrier: z.string(),
   trackingCode: z.string(),
   trackingUrl: z.url(),
   labelUrl: z.url(),
-  constCents: z.int().positive().default(0),
-  weightGrams: z.int(),
+  costCents: z.number().int().default(0).nonoptional(),
+  weightGrams: z.number().int(),
   estimatedDeliveryAt: z.iso.datetime(),
   shippedAt: z.iso.datetime(),
-  deliveredAt: z.iso.datetime()
+  deliveredAt: z.iso.datetime(),
+  ...timestamps
 });
-export type Shipments = z.infer<typeof shipmentsSchema>;
 
+export const createShipmentSchema = shipmentsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+/** Quais itens (e quantas unidades) foram em cada remessa. */
 export const shipmentItemsSchema = z.object({
+  id: z.cuid2().nonempty(),
   shipmentId: z.cuid2().nonempty(),
   orderItemId: z.cuid2().nonempty(),
-  quantity: z.int().positive()
+  quantity: z.number().int().nonoptional()
 });
-export type ShipmentItems = z.infer<typeof shipmentItemsSchema>;
 
 export const orderEventsSchema = z.object({
+  id: z.cuid2().nonempty(),
   orderId: z.cuid2().nonempty(),
+  /** "status_changed" | "payment_received" | "note_added" ... */
   type: z.string().nonempty(),
   fromStatus: z.string(),
   toStatus: z.string(),
   message: z.string(),
-  payload: z.json(),
-  actorId: z.cuid2()
+  payload: z.record(z.string(), z.unknown()).optional(),
+  /** Null quando o evento veio de webhook/sistema. */
+  actorId: z.cuid2(),
+  ...timestamps
 });
-export type OrderEvents = z.infer<typeof orderEventsSchema>;
 
-export const loginSchema = z.object({
-  email: z.email().nonempty(),
-  password: z.string().nonempty()
+export const createOrderEventSchema = orderEventsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
 });
-export type Login = z.infer<typeof loginSchema>;

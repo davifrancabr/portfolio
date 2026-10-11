@@ -8,22 +8,8 @@ import { admin, username } from 'better-auth/plugins';
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
-    provider: 'pg',
-    schema: {
-      user: schema.user,
-      session: schema.session,
-      account: schema.account,
-      verification: schema.verification,
-      userRelations: schema.userRelations,
-      sessionRelations: schema.sessionRelations,
-      accountRelations: schema.accountRelations
-    }
+    provider: 'pg'
   }),
-  advanced: {
-    database: {
-      joins: true
-    }
-  },
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
@@ -34,26 +20,6 @@ export const auth = betterAuth({
     admin({ defaultRole: 'user', adminRoles: ['admin'] }),
     nextCookies()
   ],
-  user: {
-    additionalFields: {
-      phone: {
-        type: 'string',
-        required: false
-      },
-      taxId: {
-        type: 'string',
-        required: false,
-        input: true
-      },
-      paymentCustomerId: { type: 'string', required: false, input: false },
-      acceptsMarketing: {
-        type: 'boolean',
-        required: false,
-        defaultValue: false
-      },
-      locate: { type: 'string', required: false, defaultValue: 'pt-BR' }
-    }
-  },
   session: {
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
