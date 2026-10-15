@@ -4,6 +4,7 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+
 :root {
   --sea-ink: #173a40;
   --sea-ink-soft: #416166;

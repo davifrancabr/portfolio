@@ -1,0 +1,146 @@
+@startuml
+
+' ENUMS
+enum media_category_type {
+  serie
+  movie
+  music
+  video
+  podcast
+  book
+}
+
+enum media_type_status {
+  on_going
+  completed
+  scheduled
+  dropped
+}
+
+enum watchlist_status {
+  watched
+  dropped
+  not_watched
+}
+
+' TABLES
+
+entity user {
+  id: text <<PK>>
+  name: text
+  email: text <<UNIQUE>>
+  emailVerified: boolean
+  image: text
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity session {
+  id: text <<PK>>
+  expiresAt: timestamp
+  token: text <<UNIQUE>>
+  ipAddress: text
+  userAgent: text
+  userId: text <<FK user(id)>>
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity account {
+  id: text <<PK>>
+  accountId: text
+  providerId: text
+  userId: text <<FK user(id)>>
+  accessToken: text
+  refreshToken: text
+  idToken: text
+  accessTokenExpiresAt: timestamp
+  refreshTokenExpiresAt: timestamp
+  scope: text
+  password: text
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity verification {
+  id: text <<PK>>
+  identifier: text
+  value: text
+  expiresAt: timestamp
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity media_categories {
+  id: text <<PK>>
+  name: text
+  type: media_category_type
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity medias {
+  id: text <<PK>>
+  categoryId: text <<FK media_categories(id)>>
+  name: text
+  description: text
+  status: media_type_status
+  tags: text[]
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity media_items {
+  id: text <<PK>>
+  mediaId: text <<FK medias(id)>>
+  name: text
+  mediaUrl: text
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity watchlists {
+  id: text <<PK>>
+  userId: text <<FK user(id)>>
+  name: text
+  description: text
+  isPublic: boolean
+  shareToken: text <<UNIQUE>>
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+entity watchlist_items {
+  id: text <<PK>>
+  watchlistId: text <<FK watchlists(id)>>
+  mediaId: text <<FK medias(id)>>
+  status: watchlist_status
+  createdAt: timestamp
+  updatedAt: timestamp
+}
+
+' RELATIONS
+
+user ||--o{ session : "has"
+user ||--o{ account : "has"
+user ||--o{ watchlists : "has"
+
+session }o--|| user : "belongs to"
+
+account }o--|| user : "belongs to"
+
+media_categories ||--o{ medias : "has"
+
+medias }o--|| media_categories : "belongs to"
+medias ||--o{ media_items : "has"
+medias ||--o{ watchlist_items : "is present in"
+
+media_items }o--|| medias : "belongs to"
+
+watchlists }o--|| user : "belongs to"
+watchlists ||--o{ watchlist_items : "has"
+
+watchlist_items }o--|| watchlists : "belongs to"
+watchlist_items }o--|| medias : "references"
+
+@enduml

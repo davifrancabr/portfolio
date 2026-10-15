@@ -175,6 +175,12 @@ export const productImagesSchema = z.object({
   ...timestamps
 });
 
+export const createProductImageSchema = productImagesSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
 export const productCategoriesSchema = z.object({
   productId: z.cuid2().nonempty(),
   categoryId: z.cuid2().nonempty()
@@ -205,6 +211,12 @@ export const cartItemsSchema = z.object({
   unitPriceCents: z.number().int().nonoptional(),
   compareAtPriceCents: z.number().int(),
   ...timestamps
+});
+
+export const createCartItemsSchema = cartItemsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
 });
 
 export const couponsSchema = z.object({
@@ -240,6 +252,12 @@ export const couponRedemptionsSchema = z.object({
   orderId: z.cuid2(),
   discountAppliedCents: z.number().int().nonoptional(),
   ...timestamps
+});
+
+export const createCuponRedemptionSchema = couponRedemptionsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
 });
 
 export const addressesSchema = z.object({
@@ -364,6 +382,12 @@ export const inventoryItemsSchema = z.object({
   ...timestamps
 });
 
+export const createInventoryItemSchema = inventoryItemsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
 export const stockMovementsSchema = z.object({
   id: z.cuid2().nonempty(),
   inventoryItemId: z.cuid2().nonempty(),
@@ -380,6 +404,12 @@ export const stockMovementsSchema = z.object({
 
   createdBy: z.cuid2(),
   ...timestamps
+});
+
+export const createStockMovementSchema = stockMovementsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
 });
 
 export const ordersSchema = z.object({
@@ -444,7 +474,7 @@ export const orderItemsSchema = z.object({
   sku: z.string().nonempty(),
   imageUrl: z.url(),
   /** Opções escolhidas: { "Cor": "Azul", "Tamanho": "M" } */
-  optionsSnapshot: z.json(),
+  optionsSnapshot: z.record(z.string(), z.string()).optional(),
 
   quantity: z.number().int().nonoptional(),
   unitPriceCents: z.number().int().nonoptional(),
@@ -457,6 +487,12 @@ export const orderItemsSchema = z.object({
   refundedQuantity: z.number().int().default(0).nonoptional(),
 
   ...timestamps
+});
+
+export const createOrderItemSchema = orderItemsSchema.omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
 });
 
 export const paymentsSchema = z.object({
