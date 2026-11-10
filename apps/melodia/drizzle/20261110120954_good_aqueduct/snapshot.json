@@ -1,0 +1,47 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "f39306bc-2128-4fd7-a4e6-94df46e98316",
+  "prevIds": [
+    "70470852-cf3b-4e7f-aefe-026c7a94db8a"
+  ],
+  "footprints": [
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "tracks",
+        "cover_url"
+      ],
+      "writes": [
+        "s|col|public.tracks.cover_url",
+        "n|col|public.tracks.cover_url",
+        "e|col|public.tracks.cover_url"
+      ],
+      "reads": [
+        "n|tbl|public.tracks",
+        "n|sch|public"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "tracks",
+        "name": "cover_url",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    }
+  ]
+}

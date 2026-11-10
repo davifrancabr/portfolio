@@ -1,7 +1,7 @@
 import { Disc3, Play } from 'lucide-react';
 import Link from 'next/link';
 import type { Collection } from '../data';
-import { CoverArt } from './cover-art';
+import { CoverArt } from '@/components/cover-art';
 
 type CollectionCardProps = {
   collection: Collection;

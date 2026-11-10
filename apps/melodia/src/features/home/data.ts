@@ -1,3 +1,5 @@
+import type { PlayerTrack } from '@/features/player/player-store';
+
 export type Collection = {
   id: string;
   title: string;
@@ -115,3 +117,44 @@ export const genres = [
   'Jazz',
   'Lo-fi'
 ] as const;
+
+/**
+ * Faixas de demonstração da coleção em destaque. O áudio vem de exemplos
+ * públicos (SoundHelix) e serve apenas para exercitar o player até o
+ * catálogo real existir (com URLs de áudio assinadas). `durationMs` é
+ * aproximado; os metadados carregados corrigem o valor.
+ */
+export const featuredTracks: readonly PlayerTrack[] = [
+  {
+    id: 'demo-chuva-de-verao',
+    title: 'Chuva de Verão',
+    artist: 'Ana Ribeiro',
+    gradient: 'from-amber-400 via-orange-500 to-rose-600',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    durationMs: 322_000
+  },
+  {
+    id: 'demo-neon-e-saudade',
+    title: 'Neon e Saudade',
+    artist: 'Os Astronautas',
+    gradient: 'from-sky-500 via-cyan-500 to-emerald-600',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    durationMs: 316_000
+  },
+  {
+    id: 'demo-cafe-com-jazz',
+    title: 'Café com Jazz',
+    artist: 'Trio Azul',
+    gradient: 'from-rose-500 via-pink-600 to-purple-800',
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    durationMs: 297_000
+  },
+  {
+    id: 'demo-meia-noite-em-copacabana',
+    title: 'Meia-noite em Copacabana',
+    artist: 'Melodia Sessions',
+    gradient: featured.gradient,
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+    durationMs: 349_000
+  }
+];

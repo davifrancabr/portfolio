@@ -1,9 +1,9 @@
 import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Disc3, Heart, Play } from 'lucide-react';
+import { CoverArt } from '@/components/cover-art';
+import { Disc3, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { featured } from '../data';
-import { CoverArt } from './cover-art';
+import { PlayFeaturedButton } from './play-featured-button';
 
 export function FeaturedBanner() {
   return (
@@ -28,16 +28,7 @@ export function FeaturedBanner() {
             {featured.description}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Link
-              href={featured.href}
-              className={cn(
-                buttonVariants({ size: 'lg' }),
-                'bg-gold text-gold-foreground hover:bg-gold/90'
-              )}
-            >
-              <Play className="size-4 fill-current" aria-hidden="true" />
-              Ouvir agora
-            </Link>
+            <PlayFeaturedButton />
             <Link
               href="/library"
               className={buttonVariants({ variant: 'outline', size: 'lg' })}

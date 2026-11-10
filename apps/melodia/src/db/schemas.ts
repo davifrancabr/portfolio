@@ -145,6 +145,7 @@ export const tracks = pgTable(
     durationMs: integer('duration_ms').notNull(),
     explicit: boolean('explicit').notNull().default(false),
     audioUrl: text('audio_url').notNull(),
+    coverUrl: text('cover_url'),
     playCount: integer('play_count').notNull().default(0),
     ...timestamps
   },

@@ -1,7 +1,15 @@
 'use client';
 
 import { authClient } from '@/lib/auth-client';
-import { Home, Library, LogOut, Moon, Settings, Sun } from 'lucide-react';
+import {
+  Home,
+  Library,
+  LogOut,
+  Moon,
+  Settings,
+  ShieldCheck,
+  Sun
+} from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -129,6 +137,12 @@ function UserHeader() {
             <Settings />
             Configurações
           </DropdownMenuItem>
+          {session.user.role === 'admin' && (
+            <DropdownMenuItem render={<Link href="/admin" />}>
+              <ShieldCheck />
+              Painel administrativo
+            </DropdownMenuItem>
+          )}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem

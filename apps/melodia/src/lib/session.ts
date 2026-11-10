@@ -1,5 +1,5 @@
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import 'server-only';
 import { auth } from './auth';
 
@@ -10,6 +10,21 @@ export async function getSession() {
 export async function requireSession() {
   const session = await getSession();
   if (!session) redirect('/login');
+  return session;
+}
+
+/**
+ * Recurso administrativo: exige sessão válida e papel `admin`.
+ *
+ * Retorna 404 (em vez de redirecionar) para não revelar a existência da área
+ * administrativa a usuários comuns. A verificação acontece no servidor e deve
+ * ser repetida em toda página, Server Action ou route handler administrativo.
+ */
+export async function requireAdmin() {
+  const session = await requireSession();
+
+  if (session.user.role !== 'admin') notFound();
+
   return session;
 }
 
