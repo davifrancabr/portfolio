@@ -120,7 +120,10 @@ function UserHeader() {
         <DropdownMenuGroup>
           <DropdownMenuLabel className="flex flex-col gap-0.5">
             <span className="truncate text-sm font-medium text-foreground">
-              {session.user.name}
+              <p>
+                {session.user.name}
+                {session.user.role === 'admin' && <ShieldCheck />}
+              </p>
             </span>
             <span className="truncate text-xs font-normal">
               {session.user.email}

@@ -11,7 +11,7 @@ export function CoverArt({
   gradient,
   icon: Icon = Music2,
   className
-}: CoverArtProps) {
+}: Readonly<CoverArtProps>) {
   return (
     <div
       aria-hidden="true"
