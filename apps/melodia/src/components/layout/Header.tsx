@@ -8,6 +8,7 @@ import {
   Moon,
   Settings,
   ShieldCheck,
+  ShieldCheckIcon,
   Sun
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -162,6 +163,7 @@ function UserHeader() {
 }
 
 export function Header() {
+  const { data: session } = authClient.useSession();
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center gap-4 border-b border-border bg-surface-3/95 px-4 text-foreground shadow-sm backdrop-blur">
       <nav className="flex w-full items-center justify-between gap-4">
@@ -179,6 +181,14 @@ export function Header() {
             className="w-full min-w-0 max-w-64"
           />
         </div>
+        {session?.user.role === 'admin' && (
+          <Link
+            href="/admin"
+            className="group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <ShieldCheckIcon className="size-4 transition-transform group-hover:-translate-y-0.5" />
+          </Link>
+        )}
         <ModeToggle />
         <UserHeader />
       </nav>
