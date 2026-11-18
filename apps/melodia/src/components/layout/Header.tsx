@@ -181,7 +181,7 @@ export function Header() {
             className="w-full min-w-0 max-w-64"
           />
         </div>
-        {session?.user.role === 'ADMIN' && (
+        {session?.user.role === 'admin' && (
           <Link
             href="/admin"
             className="group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
