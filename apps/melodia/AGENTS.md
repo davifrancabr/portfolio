@@ -38,6 +38,9 @@ src/
 ├─ app/
 │  ├─ (auth)/login/        # entrada (telas públicas)
 │  ├─ (auth)/register/     # cadastro (telas públicas)
+│  ├─ (app)/docs/          # documentação de funcionalidades
+│  ├─ (app)/changelog/     # histórico de versões
+│  ├─ (app)/roadmap/       # fases e funcionalidades planejadas
 │  ├─ (app)/library/       # área logada
 │  └─ api/auth/[...all]/   # handler do Better Auth
 ├─ components/             # UI reutilizável, sem regra de negócio

@@ -6,9 +6,9 @@ Cada app é independente e resolve um problema de produto diferente, mas todos s
 
 ## Projetos
 
-| Projeto                     | Descrição                                                                                                | Stack principal                                    | Estado                                                               |
-| --------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------- |
-| [**Melodia**](apps/melodia) | Plataforma de streaming de músicas: catálogo, player persistente, playlists, curtidas, histórico e busca | Next.js, Drizzle, Better Auth, shadcn/ui, Recharts | Em desenvolvimento (base e design system prontos; MVP em construção) |
+| Projeto                     | Descrição                                                                                                | Stack principal                                    | Estado                                                                                                                 |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [**Melodia**](apps/melodia) | Plataforma de streaming de músicas: catálogo, player persistente, playlists, curtidas, histórico e busca | Next.js, Drizzle, Better Auth, shadcn/ui, Recharts | Em desenvolvimento (autenticação, home, player, docs, changelog, roadmap e admin prontos; catálogo real em construção) |
 
 ### Melodia
 
@@ -77,18 +77,18 @@ bun run dev
 bunx turbo run dev --filter=melodia
 ```
 
-O app abre em [http://localhost:3000](http://localhost:3000) por padrão. Cada app lê suas variáveis de ambiente de um `.env` local (nunca versionado); consulte o `.env.example` do app quando existir.
+O app abre em [http://localhost:3000](http://localhost:3000) por padrão. Cada app lê suas variáveis de ambiente de um `.env` local (nunca versionado); consulte o `.env.example` do app para saber quais são necessárias.
 
 ### Qualidade e build
 
 ```bash
-bun run lint          # ESLint em todos os workspaces
-bun run check-types   # checagem de tipos
+bun run lint          # ESLint nos workspaces que expõem o script
+bun run check-types   # checagem de tipos nos workspaces que expõem o script
 bun run format        # Prettier
 bun run build         # build de produção (cacheado pelo Turborepo)
 ```
 
-Para atuar em um workspace específico, use `--filter` com o nome do pacote, por exemplo `bunx turbo run build --filter=melodia`.
+Para atuar em um workspace específico, use `--filter` com o nome do pacote, por exemplo `bunx turbo run build --filter=melodia`. O Melodia expõe a checagem de tipos como `typecheck`; rode `bun run typecheck` dentro de `apps/melodia` (ou `bunx turbo run typecheck --filter=melodia`).
 
 ## Princípios
 

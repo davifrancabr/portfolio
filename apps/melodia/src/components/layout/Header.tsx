@@ -2,13 +2,16 @@
 
 import { authClient } from '@/lib/auth-client';
 import {
+  BookOpen,
   Home,
   Library,
   LogOut,
+  Map,
   Moon,
   Settings,
   ShieldCheck,
   ShieldCheckIcon,
+  Sparkles,
   Sun
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
@@ -28,6 +31,9 @@ import {
 } from '../ui/dropdown-menu';
 import { Input } from '../ui/input';
 import { Spinner } from '../ui/spinner';
+
+const navLinkClassName =
+  'group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none';
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -167,14 +173,37 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full items-center gap-4 border-b border-border bg-surface-3/95 px-4 text-foreground shadow-sm backdrop-blur">
       <nav className="flex w-full items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-        >
-          <Home className="size-4 transition-transform group-hover:-translate-y-0.5" />
-          Inicio
-        </Link>
-        <div className="flex min-w-0 flex-1 items-center justify-center gap-3">
+        <div className="flex shrink-0 items-center gap-1">
+          <Link href="/" className={navLinkClassName} aria-label="Início">
+            <Home className="size-4 transition-transform group-hover:-translate-y-0.5" />
+            <span className="hidden sm:inline">Início</span>
+          </Link>
+          <Link
+            href="/docs"
+            className={navLinkClassName}
+            aria-label="Documentação"
+          >
+            <BookOpen className="size-4 transition-transform group-hover:-translate-y-0.5" />
+            <span className="hidden lg:inline">Documentação</span>
+          </Link>
+          <Link
+            href="/changelog"
+            className={navLinkClassName}
+            aria-label="Changelog"
+          >
+            <Sparkles className="size-4 transition-transform group-hover:-translate-y-0.5" />
+            <span className="hidden lg:inline">Changelog</span>
+          </Link>
+          <Link
+            href="/roadmap"
+            className={navLinkClassName}
+            aria-label="Roadmap"
+          >
+            <Map className="size-4 transition-transform group-hover:-translate-y-0.5" />
+            <span className="hidden lg:inline">Roadmap</span>
+          </Link>
+        </div>
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-3 sm:flex">
           <Input
             placeholder="Pesquisar"
             aria-label="Pesquisar"
@@ -184,7 +213,8 @@ export function Header() {
         {session?.user.role === 'admin' && (
           <Link
             href="/admin"
-            className="group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            aria-label="Painel administrativo"
+            className="group flex items-center gap-2 rounded-full px-2 py-1.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <ShieldCheckIcon className="size-4 transition-transform group-hover:-translate-y-0.5" />
           </Link>
