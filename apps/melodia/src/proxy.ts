@@ -17,6 +17,7 @@ export const config = {
     '/library/:path*',
     '/playlist/:path*',
     '/settings/:path*',
-    '/admin/:path*'
+    '/admin/:path*',
+    '/profile/:path*'
   ]
 };

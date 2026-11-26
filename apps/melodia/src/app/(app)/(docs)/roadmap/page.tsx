@@ -342,7 +342,7 @@ export default function RoadmapPage() {
           <div className="relative mt-8">
             <div
               aria-hidden="true"
-              className="absolute top-2 bottom-2 left-4 w-px bg-border sm:left-[18px]"
+              className="absolute top-2 bottom-2 left-4 w-px bg-border sm:left-4.5"
             />
             <ol className="flex flex-col gap-6">
               {roadmapPhases.map(phase => (

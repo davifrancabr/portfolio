@@ -1,6 +1,3 @@
-import type { Metadata } from 'next';
-import Link from 'next/link';
-import { Compass, Sparkles } from 'lucide-react';
 import {
   CollectionCard,
   QuickPickCard
@@ -8,6 +5,9 @@ import {
 import { FeaturedBanner } from '@/features/home/components/featured-banner';
 import { SectionHeading } from '@/features/home/components/section-heading';
 import { genres, madeForYou, recentlyPlayed } from '@/features/home/data';
+import { Compass, Sparkles } from 'lucide-react';
+import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Início | Melodia',

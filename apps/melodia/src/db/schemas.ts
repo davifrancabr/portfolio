@@ -34,6 +34,7 @@ const timestamps = {
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
+  bio: text('bio'),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
   image: text('image'),
@@ -41,8 +42,6 @@ export const user = pgTable('user', {
   banned: boolean('banned').default(false),
   banReason: text('ban_reason'),
   banExpires: timestamp('ban_expires'),
-  username: text('username').unique(),
-  displayUsername: text('display_username'),
   ...timestamps
 });
 
